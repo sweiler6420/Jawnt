@@ -1,3 +1,6 @@
+from fastapi import Header, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from api.models import *
 from api.schemas.payments import *
 from random import randint
 import uuid
@@ -59,3 +62,8 @@ def get_swipe_status(payment_id: str) -> PaymentStatus:
     return(
         PaymentStatus.SUCCESS if randint(1,2) == 1 else PaymentStatus.FAILURE
     )
+    
+
+def get_next_id(model, column, db):
+    max_id = db.query(sa.func.max(getattr(model, column))).scalar()
+    return (max_id or 100000) + 1

@@ -14,6 +14,7 @@ class OrganizationAdministrator(Base):
 
     id = sa.Column(sa.Integer, primary_key=True)
     organization_id = sa.Column(sa.Integer, sa.ForeignKey("organization.id"), nullable=False)
+    employee_id = sa.Column(sa.Integer, sa.ForeignKey("organization_employee.id"), nullable=False)
 
 
 class OrganizationEmployee(Base):
