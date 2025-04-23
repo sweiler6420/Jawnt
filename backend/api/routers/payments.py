@@ -6,6 +6,8 @@ from api.utils import *
 import uuid
 import time
 
+###################################### YOU CAN IGNORE THESE ##############################
+
 # Router for payments
 router = APIRouter()
 
