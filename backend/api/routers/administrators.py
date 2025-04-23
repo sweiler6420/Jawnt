@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from sqlalchemy.exc import SQLAlchemyError
-from api.schemas.adminstrators import *
+from api.schemas.administrators import *
 from api.utils import *
 from api.models import *
 from typing import Tuple
