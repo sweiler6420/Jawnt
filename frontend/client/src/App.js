@@ -1,50 +1,26 @@
 // src/App.js
 import React from 'react';
-import { AppProvider, useAppContext } from './context/AppContext';
-import CreateOrganization from './components/CreateOrganization';
-import Employees from './components/Employees';
-import Payment from './components/Payments';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import CreateOrganization from './components/CreateOrganization';
+import Login from './components/Login';
+import Payments from './components/Payments';
+import AdminPortal from './components/AdminPortal';
+import AppInitializer from './components/AppInitializer'; // Import the AppInitializer
 
 const App = () => {
-  const { organization } = useAppContext();
-
-  console.log(organization)
-
   return (
-    <div>
+    <>
+      <AppInitializer />
       <Navbar />
-      <div style={{ padding: '20px' }}>
-        {/* Show active organization scope */}
-        {organization && (
-          <div
-            style={{
-              backgroundColor: '#e3f2fd',
-              padding: '10px 20px',
-              marginBottom: '20px',
-              borderRadius: '6px',
-              border: '1px solid #90caf9',
-              fontWeight: 'bold',
-              color: '#0d47a1',
-            }}
-          >
-            Active Organization: {organization.name}
-          </div>
-        )}
-
-        {/* Show CreateOrganization if no org yet, otherwise show Employees and Payments */}
-        {!organization && <CreateOrganization />}
-        {organization && <Employees />}
-        {organization && <Payment />}
-      </div>
-    </div>
+      <Routes>
+        <Route path="/" element={<CreateOrganization />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/payments" element={<Payments />} />
+        <Route path="/admin" element={<AdminPortal />} />
+      </Routes>
+    </>
   );
 };
 
-const AppWrapper = () => (
-  <AppProvider>
-    <App />
-  </AppProvider>
-);
-
-export default AppWrapper;
+export default App;

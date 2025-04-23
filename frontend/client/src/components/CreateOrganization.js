@@ -1,15 +1,15 @@
 // src/components/CreateOrganization.js
 import React, { useState } from 'react';
-import { useAppContext } from '../context/AppContext';
 import useApi from '../hooks/useApi'
+import { useNavigate } from 'react-router-dom';
 
 const CreateOrganization = () => {
-    const { apiPost } = useApi()
-    const { createOrganization, addEmployee } = useAppContext();
+    const { apiCreateOrg } = useApi()
     const [orgName, setOrgName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
+    const navigate = useNavigate();
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -22,30 +22,24 @@ const CreateOrganization = () => {
             }
         }
 
-        apiPost('organization/organizations', payload).then(
+        apiCreateOrg('organization/', payload).then(
             response => {
-                let org = {
-                    "name": response.data.name,
-                    "uid": response.data.uid,
-                    "id": response.data.id,
-                }
-                createOrganization(org)
-                let employee = response.data.administrators[0].employee
-                addEmployee(employee)
+                // Redirect to login
+                navigate('/login');
             }
         )
     };
 
     return (
-        <div>
-        <h2>Create a New Organization</h2>
-        <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Organization Name" value={orgName} onChange={(e) => setOrgName(e.target.value)} required/>
-            <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required/>
-            <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} required/>
-            <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
-            <button type="submit">Create Organization</button>
-        </form>
+        <div style={{ padding: '1rem' }}>
+            <h2 style={{ textAlign: 'center' }}>Create a New Organization</h2>
+            <form onSubmit={handleSubmit}>
+                <input type="text" placeholder="Organization Name" value={orgName} onChange={(e) => setOrgName(e.target.value)} required/>
+                <input type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} required/>
+                <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} required/>
+                <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                <button type="submit">Create Organization</button>
+            </form>
         </div>
     );
 };
