@@ -6,6 +6,9 @@ from uuid import UUID
 from api.routers import administrators, employees, payments, organizations
 from api import models
 from api.database import engine
+from api.queue.queue import queue
+from api.background_worker import consume_queue_loop
+import asyncio
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -26,3 +29,12 @@ app.include_router(administrators.router, prefix="/admin", tags=["administrators
 app.include_router(employees.router, prefix="/employee", tags=["employees"])
 app.include_router(payments.router, prefix="/payment", tags=["payment"])
 
+@app.on_event("startup")
+async def startup_event():
+    # Start the consumer task in the background
+    asyncio.create_task(consume_queue_loop())
+
+
+@app.get("/")
+def root():
+    return {"message": "Hello, world!"}

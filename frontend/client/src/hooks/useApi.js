@@ -1,24 +1,54 @@
 import axios from '../axios/axios'
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 export default function useApi() {
+    const axiosPrivate = useAxiosPrivate()
 
     return {
-        apiGet: apiGetFunction.bind(null),
-        apiPost: apiPostFunction.bind(null),
-        // apiDelete: apiCall.bind(null, 'delete'),
-        // apiPut: apiCall.bind(null, 'put'),
+        apiGet: apiGetFunction.bind(null, axiosPrivate),
+        apiPost: apiPostFunction.bind(null, axiosPrivate),
+        apiDelete: apiDeleteFunction.bind(null, axiosPrivate),
+        apiPut: apiPutFunction.bind(null, axiosPrivate),
+        apiLogin: apiLoginFunction.bind(null),
+        apiCreateOrg: apiCreateOrgFunction.bind(null),
     }
 }
 
+export const apiCreateOrgFunction = async (endpoint, _params={})=> {
+    const {rawResponse=false, ...params} = _params
 
-export const apiGetFunction = async (endpoint, _params={})=> {
+    try{
+        const response = await axios.post(endpoint, params)
+        return response.data
+    } catch (err) {
+        console.log(err)
+        return {"status": err.request.status, "message": err.message, "error": err.name}
+    }
+
+}
+
+export const apiLoginFunction = async (endpoint, _params={})=> {
+    const {rawResponse=false, ...params} = _params
+
+    try{
+        const response = await axios.post(endpoint, params)
+        return response.data
+    } catch (err) {
+        console.log(err)
+        return {"status": err.request.status, "message": err.message, "error": err.name}
+    }
+
+}
+
+
+export const apiGetFunction = async (axiosPrivate, endpoint, _params={})=> {
     const {rawResponse=false, ...params} = _params
 
     const uriQuery = `?${URIEncodeObject(params)}`
     const url = `${endpoint}${uriQuery}`
 
     try{
-        const response = await axios.get(url)
+        const response = await axiosPrivate.get(url)
         return {data: response.data}
     } catch (err) {
         console.log(err)
@@ -28,11 +58,38 @@ export const apiGetFunction = async (endpoint, _params={})=> {
 }
 
 
-export const apiPostFunction = async (endpoint, _params={})=> {
+export const apiPostFunction = async (axiosPrivate, endpoint, _params={})=> {
     const {rawResponse=false, ...params} = _params
 
     try{
-        const response = await axios.post(endpoint, _params)
+        const response = await axiosPrivate.post(endpoint, _params)
+        return {data: response.data}
+    } catch (err) {
+        console.log(err)
+        return {"status": err.request.status, "message": err.message, "error": err.name}
+    }
+
+}
+
+
+export const apiDeleteFunction = async (axiosPrivate, endpoint, _params={})=> {
+    const {rawResponse=false, ...params} = _params
+
+    try{
+        const response = await axiosPrivate.delete(endpoint, _params)
+        return {data: response.data}
+    } catch (err) {
+        console.log(err)
+        return {"status": err.request.status, "message": err.message, "error": err.name}
+    }
+
+}
+
+export const apiPutFunction = async (axiosPrivate, endpoint, _params={})=> {
+    const {rawResponse=false, ...params} = _params
+
+    try{
+        const response = await axiosPrivate.put(endpoint, _params)
         return {data: response.data}
     } catch (err) {
         console.log(err)

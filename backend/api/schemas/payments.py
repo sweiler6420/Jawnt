@@ -11,7 +11,7 @@ class PaymentStatus(str, Enum):
 
 # PaymentResponse that represents the response from an external payment service
 class PaymentResponse(BaseModel):
-    payment_id: UUID
+    payment_id: int
     status: PaymentStatus
     amount: int
 
